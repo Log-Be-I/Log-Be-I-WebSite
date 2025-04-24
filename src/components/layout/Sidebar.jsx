@@ -13,7 +13,7 @@ export default function Sidebar() {
           Dashboard
         </Link>
         <Link
-          to="/users"
+          to="/member"
           className="hover:bg-primary hover:text-darkblue px-3 py-2 rounded-md transition"
         >
           회원관리
