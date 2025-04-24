@@ -1,4 +1,7 @@
-export default function App() {
-  const [count, setCount] = useState(0);
-  return <h1 className="text-3xl font-bold underline">Hello TailwindCSS!!</h1>;
+import AppRouter from "./routes/AppRouter";
+
+function App() {
+  return <AppRouter />;
 }
+
+export default App;
