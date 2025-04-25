@@ -1,10 +1,24 @@
 import defaultProfile from "../../assets/aegiRogiProfile.svg";
 import { FaTimes } from "react-icons/fa";
+import { format } from "date-fns";
 
 export default function MemberDetailModal({ isOpen, member, onClose }) {
   if (!isOpen || !member) return null; // isOpen 체크 추가!
+  const formatDate = (dateTime) => {
+    if (!dateTime) return "접속 기록 없음";
+    const date = new Date(dateTime);
+    return isNaN(date) ? "잘못된 날짜" : format(date, "yyyy-MM-dd HH:mm");
+  };
 
-  const { name, birth, nickname, profile, memberStatus, notification } = member;
+  const {
+    name,
+    birth,
+    nickname,
+    profile,
+    memberStatus,
+    notification,
+    createdAt,
+  } = member;
 
   const handleBackdropClick = (e) => {
     if (e.target.id === "modal-backdrop") {
@@ -49,6 +63,10 @@ export default function MemberDetailModal({ isOpen, member, onClose }) {
             <p>
               <span className="font-semibold text-gray-600">닉네임:</span>{" "}
               {nickname}
+            </p>
+            <p>
+              <span className="font-semibold text-gray-600">가입일:</span>{" "}
+              {formatDate(createdAt)}
             </p>
             <p>
               <span className="font-semibold text-gray-600">상태:</span>{" "}

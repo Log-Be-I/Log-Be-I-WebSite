@@ -1,0 +1,17 @@
+import axios from "axios";
+export const loginApi = async ({ username, password }) => {
+  const response = await axios.post(
+    "http://localhost:8080/auth/login",
+    { username, password },
+    { headers: { "Content-Type": "application/json" } }
+  );
+  // 헤더에서 AUthorzation 꺼내기
+  const authHeader = response.headers.authorization;
+
+  if (authHeader && authHeader.startsWith("Bearer ")) {
+    const token = authHeader.split(" ")[1];
+    return token;
+  } else {
+    throw new Error("토큰이 응답에 없습니다.");
+  }
+};

@@ -16,13 +16,18 @@ export default function MemberTable({ members, loading }) {
           <th>이름</th>
           <th>이메일</th>
           <th>출생연도</th>
+          <th>지역</th>
           <th>상태</th>
           <th>마지막 접속</th>
         </tr>
       </thead>
       <tbody>
         {members.map((member, idx) => (
-          <MemberTableRow key={member.id} member={member} index={idx + 1} />
+          <MemberTableRow
+            key={member.memberId}
+            member={member}
+            index={idx + 1}
+          />
         ))}
       </tbody>
     </table>
