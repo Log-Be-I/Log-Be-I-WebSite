@@ -1,3 +1,6 @@
+import { useState } from "react";
+import ResetButton from "../../components/common/ResetButton";
+
 const cities = [
   "서울특별시",
   "부산광역시",
@@ -19,6 +22,17 @@ const cities = [
 ];
 
 export default function MemberFilter({ filters, setFilters, onSearch }) {
+  const [isClicked, setIsClicked] = useState(false);
+
+  const handleSearch = () => {
+    setIsClicked(true);
+    onSearch();
+
+    setTimeout(() => {
+      setIsClicked(false);
+    }, 100);
+  };
+
   return (
     <div className="flex flex-wrap gap-3 mb-4 items-center">
       <select
@@ -75,15 +89,15 @@ export default function MemberFilter({ filters, setFilters, onSearch }) {
 
       <div className="flex gap-2">
         <button
-          onClick={onSearch}
+          onClick={handleSearch}
           className={`px-4 py-1 rounded text-white transition-colors duration-300
             ${isClicked ? "bg-secondary" : "bg-primary hover:bg-secondary"}`}
         >
           조회
         </button>
 
-        <button
-          onClick={() =>
+        <ResetButton
+          onReset={() =>
             setFilters({
               status: "",
               birth: "",
@@ -93,9 +107,7 @@ export default function MemberFilter({ filters, setFilters, onSearch }) {
             })
           }
           className="bg-gray-300 text-black px-4 py-2 rounded hover:bg-gray-400"
-        >
-          초기화
-        </button>
+        />
       </div>
     </div>
   );
