@@ -4,6 +4,8 @@ import Dashboard from "../pages/Dashboard";
 import MemberList from "../pages/member/MemberList";
 import QnaList from "../pages/qna/QnaList";
 import NoticeList from "../pages/notice/NoticeList";
+import NoticeRegister from "../pages/notice/NoticeRegister";
+import NoticeDetail from "../pages/notice/NoticeDetail";
 import QnaDetail from "../pages/qna/QnaDetail";
 
 export default function AppRouter() {
@@ -16,6 +18,8 @@ export default function AppRouter() {
           <Route path="/qna" element={<QnaList />} />
           <Route path="/qna/:id" element={<QnaDetail />} />
           <Route path="/notice" element={<NoticeList />} />
+          <Route path="/notice/register" element={<NoticeRegister />} />
+          <Route path="/notice/:id" element={<NoticeDetail />} />
         </Route>
       </Routes>
     </BrowserRouter>
