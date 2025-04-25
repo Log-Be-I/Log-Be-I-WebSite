@@ -33,27 +33,30 @@ export default function QnaDetail() {
     );
 
   return (
-    <div className="max-w-3xl mx-auto p-6 bg-white rounded-xl shadow-md space-y-6">
-      <h2 className="text-2xl font-bold text-gray-800 border-b pb-2">
+    <div className="max-w-4xl mx-auto p-10 bg-white rounded-xl shadow-lg space-y-10">
+      <h2 className="text-3xl font-bold text-gray-800 border-b pb-4">
         QnA 상세조회
       </h2>
 
       {/* 질문 정보 */}
-      <div className="space-y-2">
+      <div className="space-y-6">
         <div>
-          <span className="font-semibold text-gray-600">제목:</span> {qna.title}
+          <span className="text-lg font-semibold text-gray-700">제목</span>
+          <p className="mt-2 text-gray-900">{qna.title}</p>
         </div>
         <div>
-          <span className="font-semibold text-gray-600">작성자:</span>{" "}
-          {qna.writer}
+          <span className="text-lg font-semibold text-gray-700">작성자</span>
+          <p className="mt-2 text-gray-900">{qna.writer}</p>
         </div>
         <div>
-          <span className="font-semibold text-gray-600">내용:</span>
-          <div className="mt-1 p-3 bg-gray-50 rounded-md text-gray-700">
+          <span className="text-lg font-semibold text-gray-700">내용</span>
+          <div className="mt-3 p-5 bg-gray-50 rounded-lg text-gray-800 min-h-24 relative">
             {qna.content}
+            <div className="absolute bottom-2 right-4 text-sm text-gray-400">
+              등록일 {qna.createdAt}
+            </div>
           </div>
         </div>
-        <div className="text-sm text-gray-400">등록일: {qna.createdAt}</div>
       </div>
 
       <AnswerForm answer={qna.answer} />
