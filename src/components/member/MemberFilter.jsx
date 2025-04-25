@@ -75,8 +75,9 @@ export default function MemberFilter({ filters, setFilters, onSearch }) {
 
       <div className="flex gap-2">
         <button
-          className="bg-blue-400 text-white px-6 py-2 rounded text-base"
           onClick={onSearch}
+          className={`px-4 py-1 rounded text-white transition-colors duration-300
+            ${isClicked ? "bg-secondary" : "bg-primary hover:bg-secondary"}`}
         >
           조회
         </button>
