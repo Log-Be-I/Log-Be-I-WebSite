@@ -5,7 +5,7 @@ import Pagination from "../../components/common/Pagination";
 import Spinner from "../../components/common/Spinner";
 import Toast from "../../components/common/Toast";
 import SortDropdown from "../../components/common/SortDropdown";
-// import { fetchQnaList } from "../api/qnaApi";  // 실제 API 연동 시
+import { fetchAnswers } from "../../api/qnaApi";
 
 export default function QnaList() {
   const [filters, setFilters] = useState({
@@ -23,10 +23,9 @@ export default function QnaList() {
   const handleSearch = async () => {
     setLoading(true);
     try {
-      // const res = await fetchQnaList(filters, sort, page);
-      const res = MOCK_DATA; // 임시 Mock 데이터
+      const res = await fetchAnswers(filters, sort, page);
       setQnaList(res.data);
-      setTotalPages(res.totalPages);
+      setTotalPages(res.pageInfo.totalPages);
     } catch (err) {
       setToast({ show: true, message: "조회 실패했습니다.", type: "error" });
     } finally {
@@ -39,7 +38,7 @@ export default function QnaList() {
     { value: "oldest", label: "등록일순 (오래된)" },
   ];
 
-  const [sortType, setSortType] = useState("lastest");
+  const [sortType, setSortType] = useState("latest");
 
   useEffect(() => {
     handleSearch();
@@ -80,25 +79,3 @@ export default function QnaList() {
     </div>
   );
 }
-
-const MOCK_DATA = {
-  data: [
-    {
-      questionId: 1,
-      title: "배송 관련 문의",
-      writer: "홍길동",
-      questionStatus: "QUESTION_REGISTERED",
-      questionAnswerStatus: "DONE_ANSWER",
-      createdAt: "2025-04-19",
-    },
-    {
-      questionId: 2,
-      title: "환불 요청합니다",
-      writer: "김철수",
-      questionStatus: "QUESTION_REGISTERED",
-      questionAnswerStatus: "NONE_ANSWER",
-      createdAt: "2025-04-18",
-    },
-  ],
-  totalPages: 1,
-};

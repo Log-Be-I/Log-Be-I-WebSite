@@ -1,34 +1,33 @@
-import { axiosWithToken } from "../api/axios";
+import axiosInstance from "./axios";
 
-export const fetchMembers = async (filters, page, sort) => {
-  // // 실제 API 호출 예시
+export const fetchMembers = async (filters, page, sortOption) => {
+  const cleanedFilters = Object.fromEntries(
+    Object.entries(filters).filter(([_, value]) => value !== "")
+  );
 
-  // const response = await axiosWithToken.get("/members", {
-  //   params: { ...filters, page, sort },
-  // });
-  // return response.data;
-
-  // Mock 데이터
-  return {
-    data: [
-      {
-        id: 1,
-        name: "승아",
-        email: "sa@naver.com",
-        birth: 1997,
-        status: "활동 중",
-        lastLogin: "2024-04-24",
-      },
-      {
-        id: 2,
-        name: "홍길동",
-        email: "test@test.com",
-        birth: 1995,
-        status: "휴면",
-        lastLogin: "2024-01-10",
-      },
-      // 추가 데이터 ...
-    ],
-    totalCount: 13, // 총 회원 수
+  // 정렬 옵션 매핑
+  const sortMapping = {
+    lastLoginDesc: { sortBy: "lastLoginAt", order: "desc" },
+    lastLoginAsc: { sortBy: "lastLoginAt", order: "asc" },
+    createdAtDesc: { sortBy: "createdAt", order: "desc" },
+    createdAtAsc: { sortBy: "createdAt", order: "asc" },
   };
+
+  const { sortBy, order } = sortMapping[sortOption] || {
+    sortBy: "lastLoginAt",
+    order: "desc",
+  };
+
+  const response = await axiosInstance.get("/members", {
+    params: {
+      page,
+      size: 10,
+      sortBy,
+      order,
+      ...cleanedFilters,
+    },
+  });
+
+  return response.data;
 };
+export default fetchMembers;

@@ -15,20 +15,24 @@ export default function MemberList() {
   });
   const [members, setMembers] = useState([]);
   const [totalCount, setTotalCount] = useState(0);
+  const [totalPages, setTotalPages] = useState(1);
   const [page, setPage] = useState(1);
-  const [sort, setSort] = useState("lastLoginDesc");
+  const [sort, setSort] = useState("lastLoginAtDesc");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
   const MEMBERS_PER_PAGE = 10;
 
-  const handleSearch = async () => {
+  const handleSearch = async (resetPage = false) => {
     setLoading(true);
     setError("");
     try {
+      const targetPage = resetPage ? 1 : page;
       const res = await fetchMembers(filters, page, sort);
       setMembers(res.data);
-      setTotalCount(res.totalCount);
+      setTotalCount(res.pageInfo.totalElements); // 총 인원 수 표시용
+      setTotalPages(res.pageInfo.totalPages); //  서버에서 받은 totalPages 사용
+      if (resetPage) setPage(1);
     } catch (err) {
       setError("회원 정보를 불러오지 못했습니다.");
     } finally {
@@ -40,8 +44,6 @@ export default function MemberList() {
     handleSearch();
   }, [page, sort]);
 
-  const totalPages = Math.ceil(totalCount / MEMBERS_PER_PAGE);
-
   return (
     <div className="p-6">
       <h1 className="text-2xl font-bold mb-4">회원관리</h1>
@@ -50,7 +52,7 @@ export default function MemberList() {
       <MemberFilter
         filters={filters}
         setFilters={setFilters}
-        onSearch={handleSearch}
+        onSearch={() => handleSearch(true)} // 검색 시 페이지 초기화
       />
 
       {/* 총 인원수 + 정렬 옵션 */}
@@ -61,10 +63,10 @@ export default function MemberList() {
           onChange={(e) => setSort(e.target.value)}
           className="h-10 border rounded px-3"
         >
-          <option value="lastLoginDesc">접속순 (최신)</option>
-          <option value="lastLoginAsc">접속순 (오래된)</option>
-          <option value="joinDesc">가입순 (최신)</option>
-          <option value="joinAsc">가입순 (오래된)</option>
+          <option value="lastLoginAtDesc">접속순 (최신)</option>
+          <option value="lastLoginAtAsc">접속순 (오래된)</option>
+          <option value="createdAtDesc">가입순 (최신)</option>
+          <option value="createdAtAsc">가입순 (오래된)</option>
         </select>
       </div>
 
