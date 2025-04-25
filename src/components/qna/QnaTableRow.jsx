@@ -15,7 +15,7 @@ export default function QnaTableRow({ qna, index }) {
         {qna.questionAnswerStatus === "DONE_ANSWER" ? (
           <span className="text-green-500 font-semibold">답변완료</span>
         ) : (
-          <span className="text-gray-400">미등록</span>
+          <span className="text-gray-400">-</span>
         )}
       </td>
       <td className="py-3">{qna.createdAt}</td>
