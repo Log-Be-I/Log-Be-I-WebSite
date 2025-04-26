@@ -1,7 +1,14 @@
 import MemberTableRow from "./MemberTableRow";
 import Spinner from "../common/Spinner";
+import { useState } from "react";
+import MemberDetailModal from "./MemberDetailModal";
 
 export default function MemberTable({ members, loading }) {
+  const [selectedMember, setSelectedMember] = useState(null);
+
+  const handleOpenModal = (member) => setSelectedMember(member);
+  const handleCloseModal = () => setSelectedMember(null);
+
   if (loading) return <Spinner />;
   if (!Array.isArray(members) || members.length === 0)
     return (
@@ -9,27 +16,36 @@ export default function MemberTable({ members, loading }) {
     );
 
   return (
-    <table className="w-full table-auto border-collapse">
-      <thead className="bg-gray-100">
-        <tr>
-          <th>No</th>
-          <th>이름</th>
-          <th>이메일</th>
-          <th>출생연도</th>
-          <th>지역</th>
-          <th>상태</th>
-          <th>마지막 접속</th>
-        </tr>
-      </thead>
-      <tbody>
-        {members.map((member, idx) => (
-          <MemberTableRow
-            key={member.memberId}
-            member={member}
-            index={idx + 1}
-          />
-        ))}
-      </tbody>
-    </table>
+    <>
+      <table className="w-full table-auto border-collapse">
+        <thead className="bg-gray-100">
+          <tr>
+            <th>No</th>
+            <th>이름</th>
+            <th>이메일</th>
+            <th>출생연도</th>
+            <th>지역</th>
+            <th>상태</th>
+            <th>마지막 접속</th>
+          </tr>
+        </thead>
+        <tbody>
+          {members.map((member, idx) => (
+            <MemberTableRow
+              key={member.memberId}
+              member={member}
+              index={idx + 1}
+              onOpenModal={handleOpenModal}
+            />
+          ))}
+        </tbody>
+      </table>
+
+      <MemberDetailModal
+        isOpen={!!selectedMember}
+        member={selectedMember}
+        onClose={handleCloseModal}
+      />
+    </>
   );
 }

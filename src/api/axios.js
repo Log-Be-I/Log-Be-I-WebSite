@@ -12,6 +12,7 @@ axiosInstance.interceptors.request.use(
     const token = localStorage.getItem("adminToken");
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
+      console.log("🚀 요청 헤더:", config.headers);
     }
     return config;
   },

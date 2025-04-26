@@ -1,31 +1,55 @@
 import { useState } from "react";
+import { createAnswer, deleteAnswer, updateAnswer } from "../../api/qnaApi";
 import Toast from "../common/Toast";
 
-export default function AnswerForm({ answer }) {
+export default function AnswerForm({ answer, questionId, refreshQnA }) {
   const [editMode, setEditMode] = useState(false);
   const [content, setContent] = useState(answer?.content || "");
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
   const [toastType, setToastType] = useState("info");
 
-  const handleDelete = () => {
-    setContent("");
-    setToastMessage("답변이 삭제되었습니다.");
-    setToastType("error");
-    setShowToast(true);
-    setEditMode(false);
+  const handleDelete = async () => {
+    try {
+      await deleteAnswer(questionId, answer.answerId);
+      setContent("");
+      setToastMessage("답변이 삭제되었습니다.");
+      setToastType("success");
+      setEditMode(false);
+      setShowToast(true);
+    } catch (error) {
+      setToastMessage("답변 삭제에 실패했습니다.");
+      setToastType("error");
+      setShowToast(true);
+    }
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!content.trim()) {
       setToastMessage("내용을 입력하세요.");
       setToastType("error");
-    } else {
+      setShowToast(true);
+      return;
+    }
+    try {
+      if (answer?.answerId) {
+        await updateAnswer(questionId, answer.answerId, content);
+        setToastMessage("답변이 수정되었습니다.");
+      } else {
+        await createAnswer(questionId, content);
+        setToastMessage("답변이 등록되었습니다.");
+      }
+
+      await refreshQnA();
       setToastMessage("답변이 저장되었습니다.");
       setToastType("success");
       setEditMode(false);
+      setShowToast(true);
+    } catch (error) {
+      setToastMessage("답변 저장에 실패했습니다.");
+      setToastType("error");
+      setShowToast(true);
     }
-    setShowToast(true);
   };
 
   return (

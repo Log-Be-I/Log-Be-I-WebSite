@@ -1,4 +1,3 @@
-import defaultProfile from "../../assets/aegiRogiProfile.svg";
 import { FaTimes } from "react-icons/fa";
 import { format } from "date-fns";
 
@@ -20,6 +19,10 @@ export default function MemberDetailModal({ isOpen, member, onClose }) {
     createdAt,
   } = member;
 
+  const isValidProfile = profile && profile.startsWith("http");
+  const profileSrc = isValidProfile ? profile : "/aegiRogiProfile.svg";
+
+  console.log("현재 profile 값:", profile);
   const handleBackdropClick = (e) => {
     if (e.target.id === "modal-backdrop") {
       onClose();
@@ -48,9 +51,9 @@ export default function MemberDetailModal({ isOpen, member, onClose }) {
 
         <div className="flex flex-col items-center gap-4">
           <img
-            src={profile || defaultProfile}
+            src={profileSrc}
             alt="프로필 이미지"
-            className="w-24 h-24 rounded-full object-cover border-2"
+            className="w-24 h-24 rounded-full border-2 bg-gray-100 p-2 object-contain"
           />
           <div className="w-full mt-4 space-y-4 text-center text-gray-700">
             <p>

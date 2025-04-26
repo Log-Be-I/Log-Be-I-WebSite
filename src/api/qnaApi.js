@@ -5,26 +5,39 @@ export const getQnaDetail = async (id) => {
   return response.data;
 };
 
-export const postAnswer = async (qnaId, content) => {
-  const response = await axiosInstance.post(`/questions/${qnaId}/answers`, {
-    content,
-  });
+export const createAnswer = async (questionId, content) => {
+  const response = await axiosInstance.post(
+    `/questions/${questionId}/answers`,
+    { content }
+  );
+
+  const locationUri = response.headers.location;
+  return { locationUri, data: response.data };
+};
+
+export const updateAnswer = async (questionId, answerId, content) => {
+  const response = await axiosInstance.patch(
+    `/questions/${questionId}/answers/${answerId}`,
+    { content }
+  );
   return response.data;
 };
 
-export const patchAnswer = async (qnaId, content) => {
-  const response = await axiosInstance.patch(`/answers/${qnaId}`, { content });
+export const deleteAnswer = async (questionId, answerId) => {
+  const response = await axiosInstance.delete(
+    `/questions/${questionId}/answers/${answerId}`
+  );
   return response.data;
 };
 
-export const deleteAnswer = async (answerId) => {
-  const response = await axiosInstance.delete(`/answers/${answerId}`);
-  return response.data;
+export const fetchAnswers = async (sortType, page, size) => {
+  try {
+    const params = { sortType, page, size };
+    //console.log("QnA 요청 params:", params);
+    const response = await axiosInstance.get("/questions/office", { params });
+    return response.data;
+  } catch (error) {
+    console.error("QnA 조회 실패:", error);
+    throw error; // 상위에서 Toast 처리 등 가능
+  }
 };
-
-// export const getQnaList = async (filters, sort, page) => {
-//   const response = await axiosInstance.get("/questions", {
-//     params: { filters, sort, page },
-//   });
-//   return response.data;
-// };
