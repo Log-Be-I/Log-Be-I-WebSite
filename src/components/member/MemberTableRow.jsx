@@ -1,10 +1,6 @@
-import { useState } from "react";
-import MemberDetailModal from "./MemberDetailModal";
 import { format } from "date-fns";
 
-export default function MemberTableRow({ member, index }) {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
+export default function MemberTableRow({ member, index, onOpenModal }) {
   const formatDate = (dateTime) => {
     if (!dateTime) return "접속 기록 없음";
     const date = new Date(dateTime);
@@ -43,7 +39,7 @@ export default function MemberTableRow({ member, index }) {
     <>
       <tr
         className="border-b text-center cursor-pointer hover:bg-gray-100"
-        onClick={() => setIsModalOpen(true)}
+        onClick={() => onOpenModal(member)}
       >
         <td className="py-4">{index}</td>
         <td className="py-4">{member.name}</td>
@@ -53,11 +49,6 @@ export default function MemberTableRow({ member, index }) {
         <td className="py-4">{getStatusBadge(member.memberStatus)}</td>
         <td className="py-4">{formatDate(member.lastLoginAt)}</td>
       </tr>
-      <MemberDetailModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        member={member}
-      />
     </>
   );
 }

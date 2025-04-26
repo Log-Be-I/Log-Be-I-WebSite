@@ -13,7 +13,6 @@ export default function QnaList() {
     writer: "",
     noAnswer: false,
   });
-  const [sort, setSort] = useState("latest");
   const [qnaList, setQnaList] = useState([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -23,7 +22,7 @@ export default function QnaList() {
   const handleSearch = async () => {
     setLoading(true);
     try {
-      const res = await fetchAnswers(filters, sort, page);
+      const res = await fetchAnswers(sortType, page, 10);
       setQnaList(res.data);
       setTotalPages(res.pageInfo.totalPages);
     } catch (err) {
@@ -34,15 +33,24 @@ export default function QnaList() {
   };
 
   const sortOptions = [
-    { value: "latest", label: "등록일순 (최신)" },
+    { value: "newest", label: "등록일순 (최신)" },
     { value: "oldest", label: "등록일순 (오래된)" },
   ];
 
-  const [sortType, setSortType] = useState("latest");
+  const [sortType, setSortType] = useState("newest");
 
   useEffect(() => {
     handleSearch();
-  }, [page, sort]);
+  }, [page, sortType]);
+
+  useEffect(() => {
+    if (toast.show) {
+      const timer = setTimeout(() => {
+        setToast({ ...toast, show: false });
+      }, 2000); // 2초 뒤 자동 종료
+      return () => clearTimeout(timer);
+    }
+  }, [toast.show]);
 
   return (
     <div className="p-6">

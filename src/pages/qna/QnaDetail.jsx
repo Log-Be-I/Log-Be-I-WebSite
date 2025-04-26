@@ -2,9 +2,8 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { getQnaDetail, deleteAnswer } from "../../api/qnaApi";
 import Spinner from "../../components/common/Spinner";
-import Toast from "../../components/common/Toast";
 import AnswerForm from "../../components/qna/AnswerForm";
-import Modal from "../../components/common/Modal";
+import { format } from "date-fns";
 
 export default function QnaDetail() {
   const { id } = useParams();
@@ -13,18 +12,20 @@ export default function QnaDetail() {
   const [toast, setToast] = useState("");
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const data = await getQnaDetail(id);
-        setQna(data);
-      } catch (error) {
-        setToast("데이터를 불러오는 데 실패했습니다.");
-      } finally {
-        setLoading(false);
-      }
-    };
     fetchData();
   }, [id]);
+
+  const fetchData = async () => {
+    try {
+      const response = await getQnaDetail(id);
+      console.log("💾 불러온 데이터:", response.data);
+      setQna(response.data);
+    } catch (error) {
+      setToast("데이터를 불러오는 데 실패했습니다.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   if (loading) return <Spinner />;
   if (!qna)
@@ -46,20 +47,25 @@ export default function QnaDetail() {
         </div>
         <div>
           <span className="text-lg font-semibold text-gray-700">작성자</span>
-          <p className="mt-2 text-gray-900">{qna.writer}</p>
+          <p className="mt-2 text-gray-900">{qna.writer || qna.memberId}</p>
         </div>
         <div>
           <span className="text-lg font-semibold text-gray-700">내용</span>
           <div className="mt-3 p-5 bg-gray-50 rounded-lg text-gray-800 min-h-24 relative">
             {qna.content}
             <div className="absolute bottom-2 right-4 text-sm text-gray-400">
-              등록일 {qna.createdAt}
+              등록일 {format(new Date(qna.createdAt), "yyyy-MM-dd")}
             </div>
           </div>
         </div>
       </div>
-
-      <AnswerForm answer={qna.answer} />
+      {qna && (
+        <AnswerForm
+          answer={qna.answer}
+          questionId={qna.questionId}
+          refreshQnA={fetchData}
+        />
+      )}
     </div>
   );
 }
