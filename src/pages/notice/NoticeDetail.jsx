@@ -9,37 +9,28 @@ import NoticeForm from "../../components/notice/NoticeForm";
 import Modal from "../../components/common/Modal";
 import Toast from "../../components/common/Toast";
 import PinnedIcon from "../../components/notice/PinnedIcon";
-import { noticeMockData } from "../../mock/noticeMockData";
+import { format } from "date-fns";
 
 export default function NoticeDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [notice, setNotice] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [editMode, setEditMode] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [toast, setToast] = useState("");
   const [toastType, setToastType] = useState("success");
 
   useEffect(() => {
-    // const fetchData = async () => {
-    //   try {
-    //     const res = await getNoticeDetail(id);
-    //     setNotice(res.data);
-    //   } catch {
-    //     setToast("공지사항을 불러오는 데 실패했습니다.");
-    //   }
-    // };
-    // fetchData();
-    setTimeout(() => {
-      const foundNotice = noticeMockData.data.find(
-        (notice) => notice.noticeId === Number(id)
-      );
-      if (foundNotice) {
-        setNotice(foundNotice);
-      } else {
-        setNotice(null);
+    const fetchData = async () => {
+      try {
+        const res = await getNoticeDetail(id);
+        setNotice(res.data);
+      } catch {
+        setToast("공지사항을 불러오는 데 실패했습니다.");
       }
-    }, 300);
+    };
+    fetchData();
   }, [id]);
 
   const handleDelete = async () => {
@@ -108,7 +99,7 @@ export default function NoticeDetail() {
             <p className="mt-3 text-gray-900">{notice.image}</p>
           </div>
           <div className="text-sm text-gray-400 text-right mt-6">
-            작성일: {notice.createdAt}
+            작성일: {format(new Date(notice.createdAt), "yyyy-MM-dd")}
           </div>
         </div>
       )}
