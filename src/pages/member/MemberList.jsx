@@ -7,7 +7,7 @@ import Toast from "../../components/common/Toast";
 
 export default function MemberList() {
   const [filters, setFilters] = useState({
-    status: "",
+    memberStatus: "",
     birth: "",
     name: "",
     email: "",
@@ -17,21 +17,20 @@ export default function MemberList() {
   const [totalCount, setTotalCount] = useState(0);
   const [totalPages, setTotalPages] = useState(1);
   const [page, setPage] = useState(1);
-  const [sort, setSort] = useState("lastLoginAtDesc");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-
-  const MEMBERS_PER_PAGE = 10;
-
+  const [sortBy, setSortBy] = useState("lastLoginAt");
+  const [order, setOrder] = useState("desc");
+  const [resetTrigger, setResetTrigger] = useState(false);
   const handleSearch = async (resetPage = false) => {
     setLoading(true);
     setError("");
     try {
-      const targetPage = resetPage ? 1 : page;
-      const res = await fetchMembers(filters, page, sort);
+      const res = await fetchMembers(filters, page, sortBy, order);
       setMembers(res.data);
       setTotalCount(res.pageInfo.totalElements); // 총 인원 수 표시용
       setTotalPages(res.pageInfo.totalPages); //  서버에서 받은 totalPages 사용
+
       if (resetPage) setPage(1);
     } catch (err) {
       setError("회원 정보를 불러오지 못했습니다.");
@@ -41,8 +40,15 @@ export default function MemberList() {
   };
 
   useEffect(() => {
+    if (resetTrigger) {
+      handleSearch();
+      setResetTrigger(false); // 트리거 초기화
+    }
+  }, [resetTrigger]);
+
+  useEffect(() => {
     handleSearch();
-  }, [page, sort]);
+  }, [page, sortBy, order]);
 
   return (
     <div className="p-6">
@@ -53,22 +59,14 @@ export default function MemberList() {
         filters={filters}
         setFilters={setFilters}
         onSearch={() => handleSearch(true)} // 검색 시 페이지 초기화
+        totalCount={totalCount}
+        sortBy={sortBy}
+        setSortBy={setSortBy}
+        order={order}
+        setOrder={setOrder}
+        setPage={setPage}
+        setResetTrigger={setResetTrigger}
       />
-
-      {/* 총 인원수 + 정렬 옵션 */}
-      <div className="flex justify-between items-center mt-4 mb-2">
-        <div className="text-gray-700">총 {totalCount}명</div>
-        <select
-          value={sort}
-          onChange={(e) => setSort(e.target.value)}
-          className="h-10 border rounded px-3"
-        >
-          <option value="lastLoginAtDesc">접속순 (최신)</option>
-          <option value="lastLoginAtAsc">접속순 (오래된)</option>
-          <option value="createdAtDesc">가입순 (최신)</option>
-          <option value="createdAtAsc">가입순 (오래된)</option>
-        </select>
-      </div>
 
       {/* 테이블 */}
       <MemberTable members={members || []} loading={loading} />

@@ -9,6 +9,7 @@ export default function NoticeRegister() {
   const [importance, setImportance] = useState("NONE");
   const [file, setFile] = useState(null);
   const [toast, setToast] = useState("");
+  const [toastType, setToastType] = useState("info");
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -26,17 +27,21 @@ export default function NoticeRegister() {
         noticeType: "NOTICE",
         isPinned: importance,
       });
+      setToastType("success");
       setToast("공지사항이 등록되었습니다!");
       setTimeout(() => navigate("/notice"), 1500);
-    } catch {
+    } catch (error) {
       setToast("등록 실패");
+      setToastType("error");
     }
   };
 
   return (
     <div className="max-w-2xl mx-auto p-6 bg-white rounded shadow space-y-4">
       <h2 className="text-xl font-bold border-b pb-2">공지사항 등록</h2>
-      {toast && <Toast message={toast} onClose={() => setToast("")} />}
+      {toast && (
+        <Toast message={toast} type={toastType} onClose={() => setToast("")} />
+      )}
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
           <label className="font-semibold">중요도</label>

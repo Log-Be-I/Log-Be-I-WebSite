@@ -8,8 +8,8 @@ export default function MemberTableRow({ member, index, onOpenModal }) {
   };
 
   // 상태에 따른 색상과 텍스트 매핑
-  const getStatusBadge = (status) => {
-    switch (status) {
+  const getStatusBadge = (memberStatus) => {
+    switch (memberStatus) {
       case "MEMBER_ACTIVE":
         return (
           <span className="flex items-center justify-center gap-2">
@@ -32,7 +32,7 @@ export default function MemberTableRow({ member, index, onOpenModal }) {
           </span>
         );
       default:
-        return status;
+        return memberStatus;
     }
   };
   return (
