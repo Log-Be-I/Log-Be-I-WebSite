@@ -4,7 +4,6 @@ import NoticeTable from "../../components/notice/NoticeTable";
 import Pagination from "../../components/common/Pagination";
 import { useNavigate } from "react-router-dom";
 import Spinner from "../../components/common/Spinner";
-import { noticeMockData } from "../../mock/noticeMockData";
 
 export default function NoticeList() {
   const [notices, setNotices] = useState([]);
@@ -16,16 +15,15 @@ export default function NoticeList() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // const res = await getNotices(page);
-        // const sortedNotices = [...res.data].sort((a, b) => {
-        //   const priority = { URGENT_PINNED: 1, PINNED: 2, NONE: 3 };
-        //   if (priority[a.isPinned] !== priority[b.isPinned]) {
-        //     return priority[a.isPinned] - priority[b.isPinned];
-        //   }
-        //   return new Date(b.createdAt) - new Date(a.createdAt);
-        // });
-        // setNotices(sortedNotices);
-        setNotices(noticeMockData.data);
+        const res = await getNotices(page);
+        const sortedNotices = [...res.data].sort((a, b) => {
+          const priority = { URGENT_PINNED: 1, PINNED: 2, NONE: 3 };
+          if (priority[a.isPinned] !== priority[b.isPinned]) {
+            return priority[a.isPinned] - priority[b.isPinned];
+          }
+          return new Date(b.createdAt) - new Date(a.createdAt);
+        });
+        setNotices(sortedNotices);
         setTotalPages(res.pageInfo.totalPages);
       } catch (error) {
         console.error("공지사항 조회 실패", error);

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { registerNotice } from "../../api/noticeApi";
+import { createNotice } from "../../api/noticeApi";
 import { useNavigate } from "react-router-dom";
 import Toast from "../../components/common/Toast";
 
@@ -19,7 +19,7 @@ export default function NoticeRegister() {
     }
 
     try {
-      await registerNotice({
+      await createNotice({
         title,
         content,
         image: file ? file.name : null,
