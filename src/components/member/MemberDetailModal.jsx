@@ -53,7 +53,7 @@ export default function MemberDetailModal({ isOpen, member, onClose }) {
           <img
             src={profileSrc}
             alt="프로필 이미지"
-            className="w-24 h-24 rounded-full border-2 bg-gray-100 p-2 object-contain"
+            className="w-24 h-24 rounded-full border-2 bg-white p-2 object-contain"
           />
           <div className="w-full mt-4 space-y-4 text-center text-gray-700">
             <p>
