@@ -30,10 +30,23 @@ export const deleteAnswer = async (questionId, answerId) => {
   return response.data;
 };
 
-export const fetchAnswers = async (sortType, page, size) => {
+export const fetchAnswers = async (filters, page, sortType) => {
+  const cleanedFilters = Object.fromEntries(
+    Object.entries(filters).filter(
+      ([_, value]) => value !== "" && value !== false
+    )
+  );
+
+  const params = {
+    page,
+    size: 10,
+    sortType, // 단일 정렬 조건만 전달달
+    ...cleanedFilters,
+  };
+
   try {
-    const params = { sortType, page, size };
-    //console.log("QnA 요청 params:", params);
+    console.log("📡 QnA API 요청 params:", params);
+
     const response = await axiosInstance.get("/questions/office", { params });
     return response.data;
   } catch (error) {

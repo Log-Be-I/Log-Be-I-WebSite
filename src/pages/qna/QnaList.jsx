@@ -10,34 +10,33 @@ import { fetchAnswers } from "../../api/qnaApi";
 export default function QnaList() {
   const [filters, setFilters] = useState({
     title: "",
-    writer: "",
+    email: "",
     noAnswer: false,
   });
   const [qnaList, setQnaList] = useState([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
   const [toast, setToast] = useState({ show: false, message: "", type: "" });
 
-  const handleSearch = async () => {
+  // 정렬 상태는 단일 sortType만!
+  const [sortType, setSortType] = useState("newest");
+
+  const handleSearch = async (resetPage = false) => {
     setLoading(true);
+    setError(null);
     try {
-      const res = await fetchAnswers(sortType, page, 10);
+      const res = await fetchAnswers(filters, page, sortType);
       setQnaList(res.data);
       setTotalPages(res.pageInfo.totalPages);
+      if (resePage) setPage(1);
     } catch (err) {
       setToast({ show: true, message: "조회 실패했습니다.", type: "error" });
     } finally {
       setLoading(false);
     }
   };
-
-  const sortOptions = [
-    { value: "newest", label: "등록일순 (최신)" },
-    { value: "oldest", label: "등록일순 (오래된)" },
-  ];
-
-  const [sortType, setSortType] = useState("newest");
 
   useEffect(() => {
     handleSearch();
@@ -58,15 +57,19 @@ export default function QnaList() {
       <QnaFilter
         filters={filters}
         setFilters={setFilters}
-        onSearch={handleSearch}
+        onSearch={() => handleSearch(true)}
+        totalCount={qnaList.length}
+        sortType={sortType}
+        setSortType={setSortType}
+        setPage={setPage}
       />
-      <div className="flex justify-end mb-2">
+      {/* <div className="flex justify-end mb-2">
         <SortDropdown
           value={sortType}
           onChange={setSortType}
           options={sortOptions}
         />
-      </div>
+      </div> */}
       {loading ? (
         <Spinner />
       ) : qnaList.length > 0 ? (
@@ -83,7 +86,7 @@ export default function QnaList() {
           문의 내역이 없습니다.
         </div>
       )}
-      {toast.show && <Toast message={toast.message} type={toast.type} />}
+      {error && <Toast message={error} type="error" />}
     </div>
   );
 }
