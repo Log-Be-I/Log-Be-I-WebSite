@@ -63,10 +63,10 @@ export default function MemberFilter({
         <select
           value={filters.birth}
           onChange={(e) => setFilters({ ...filters, birth: e.target.value })}
-          className="border px-4 py-2 rounded text-base"
+          className="border px-4 py-2 rounded text-base max-h-30 overflow-y-auto"
         >
           <option value="">연도</option>
-          {[...Array(50)].map((_, i) => (
+          {[...Array(42)].map((_, i) => (
             <option key={i} value={1980 + i}>
               {1980 + i}
             </option>

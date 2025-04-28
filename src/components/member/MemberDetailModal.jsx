@@ -6,7 +6,7 @@ export default function MemberDetailModal({ isOpen, member, onClose }) {
   const formatDate = (dateTime) => {
     if (!dateTime) return "접속 기록 없음";
     const date = new Date(dateTime);
-    return isNaN(date) ? "잘못된 날짜" : format(date, "yyyy-MM-dd HH:mm");
+    return isNaN(date) ? "잘못된 날짜" : format(date, "yyyy-MM-dd");
   };
 
   const {

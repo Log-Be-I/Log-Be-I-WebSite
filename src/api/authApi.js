@@ -1,5 +1,6 @@
 import axios from "axios";
 export const loginApi = async ({ username, password }) => {
+  console.log("🔥 로그인 요청 데이터:", { username, password });
   const response = await axios.post(
     "http://localhost:8080/auth/login",
     { username, password },

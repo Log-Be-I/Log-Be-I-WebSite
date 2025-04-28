@@ -12,7 +12,7 @@ export default function QnaFilter({
   setPage,
 }) {
   const handleReset = () => {
-    const reset = { title: "", email: "", noAnswer: false };
+    const reset = { title: "", writerEmail: "", onlyNotAnswer: false };
     setFilters(reset);
     setSortType("newest");
     setPage(1);
@@ -32,23 +32,25 @@ export default function QnaFilter({
         <input
           type="text"
           placeholder="작성자"
-          value={filters.email}
-          onChange={(e) => setFilters({ ...filters, email: e.target.value })}
+          value={filters.writerEmail}
+          onChange={(e) =>
+            setFilters({ ...filters, writerEmail: e.target.value })
+          }
           className="border px-4 py-2 rounded text-base"
         />
         <label className="flex items-center gap-2">
           <input
             type="checkbox"
-            checked={filters.noAnswer}
+            checked={filters.onlyNotAnswer}
             onChange={(e) =>
-              setFilters({ ...filters, noAnswer: e.target.checked })
+              setFilters({ ...filters, onlyNotAnswer: e.target.checked })
             }
           />
-          답변 미등록만 보기기
+          답변 미등록만 보기
         </label>
         <div className="flex gap-2">
           <SearchButton onClick={onSearch} />
-          <ResetButton onClick={handleReset} />
+          <ResetButton onReset={handleReset} />
         </div>
       </div>
 

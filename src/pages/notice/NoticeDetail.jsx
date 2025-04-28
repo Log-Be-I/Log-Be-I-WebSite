@@ -62,89 +62,100 @@ export default function NoticeDetail() {
     return <div className="text-center text-gray-500">Loading...</div>;
 
   return (
-    <div className="max-w-4xl mx-auto p-10 bg-white rounded-xl shadow-lg space-y-10">
-      <h2 className="text-3xl font-bold text-gray-800 border-b pb-4">
-        공지사항 상세 조회
-      </h2>
+    <div>
+      <div className="max-w-4xl mx-auto p-10 bg-white rounded-xl shadow-lg space-y-10">
+        <h2 className="text-3xl font-bold text-gray-800 border-b pb-4">
+          공지사항 상세 조회
+        </h2>
 
-      {editMode ? (
-        <NoticeForm initialData={notice} onSubmit={handleUpdate} />
-      ) : (
-        <div className="space-y-8">
-          <div>
-            <span className="text-lg font-semibold text-gray-700">제목</span>
-            <p className="mt-3 text-gray-900">{notice.title}</p>
-          </div>
-          <div>
-            <span className="text-lg font-semibold text-gray-700">중요도</span>
-            <div className="flex items-center gap-2 mt-3">
-              <span className="text-gray-600">
-                {notice.isPinned === "URGENT_PINNED"
-                  ? "긴급 고정"
-                  : notice.isPinned === "PINNED"
-                    ? "상단 고정"
-                    : "고정 없음"}
+        {editMode ? (
+          <NoticeForm initialData={notice} onSubmit={handleUpdate} />
+        ) : (
+          <div className="space-y-8">
+            <div>
+              <span className="text-lg font-semibold text-gray-700">제목</span>
+              <p className="mt-3 text-gray-900">{notice.title}</p>
+            </div>
+            <div>
+              <span className="text-lg font-semibold text-gray-700">
+                중요도
               </span>
-              <PinnedIcon isPinned={notice.isPinned} />
+              <div className="flex items-center gap-2 mt-3">
+                <span className="text-gray-600">
+                  {notice.isPinned === "URGENT_PINNED"
+                    ? "긴급 고정"
+                    : notice.isPinned === "PINNED"
+                      ? "상단 고정"
+                      : "고정 없음"}
+                </span>
+                <PinnedIcon isPinned={notice.isPinned} />
+              </div>
+            </div>
+            <div>
+              <span className="text-lg font-semibold text-gray-700">내용</span>
+              <div className="mt-4 p-5 bg-gray-50 rounded-lg text-gray-800 min-h-24">
+                {notice.content}
+              </div>
+            </div>
+            <div>
+              <span className="text-lg font-semibold text-gray-700">
+                이미지
+              </span>
+              <p className="mt-3 text-gray-900">{notice.image}</p>
+            </div>
+            <div className="text-sm text-gray-400 text-right mt-6">
+              작성일: {format(new Date(notice.createdAt), "yyyy-MM-dd")}
             </div>
           </div>
-          <div>
-            <span className="text-lg font-semibold text-gray-700">내용</span>
-            <div className="mt-4 p-5 bg-gray-50 rounded-lg text-gray-800 min-h-24">
-              {notice.content}
-            </div>
-          </div>
-          <div>
-            <span className="text-lg font-semibold text-gray-700">이미지</span>
-            <p className="mt-3 text-gray-900">{notice.image}</p>
-          </div>
-          <div className="text-sm text-gray-400 text-right mt-6">
-            작성일: {format(new Date(notice.createdAt), "yyyy-MM-dd")}
-          </div>
-        </div>
-      )}
+        )}
 
-      {!editMode && (
-        <div className="flex justify-end gap-4">
-          <button
-            onClick={() => setEditMode(true)}
-            className="bg-primary text-white px-5 py-2 rounded hover:bg-secondary"
-          >
-            수정
-          </button>
-          <button
-            onClick={() => setShowModal(true)}
-            className="bg-red-400 text-white px-5 py-2 rounded hover:bg-red-500"
-          >
-            삭제
-          </button>
-        </div>
-      )}
-
-      {/* Confirm Modal */}
-      {showModal && (
-        <Modal isOpen={showModal} onClose={() => setShowModal(false)}>
-          <p>정말 삭제하시겠습니까?</p>
-          <div className="flex justify-center gap-4 mt-4">
+        {!editMode && (
+          <div className="flex justify-end gap-4">
             <button
-              onClick={handleDelete}
-              className="bg-red-500 text-white px-4 py-2 rounded"
+              onClick={() => setEditMode(true)}
+              className="bg-primary text-white px-5 py-2 rounded hover:bg-secondary"
+            >
+              수정
+            </button>
+            <button
+              onClick={() => setShowModal(true)}
+              className="bg-red-400 text-white px-5 py-2 rounded hover:bg-red-500"
             >
               삭제
             </button>
-            <button
-              onClick={() => setShowModal(false)}
-              className="bg-gray-300 px-4 py-2 rounded"
-            >
-              취소
-            </button>
           </div>
-        </Modal>
-      )}
+        )}
 
-      {toast && (
-        <Toast message={toast} onClose={() => setToast("")} type={toastType} />
-      )}
+        {/* Confirm Modal */}
+        {showModal && (
+          <Modal isOpen={showModal} onClose={() => setShowModal(false)}>
+            <p>정말 삭제하시겠습니까?</p>
+            <div className="flex justify-center gap-4 mt-4">
+              <button
+                onClick={handleDelete}
+                className="bg-red-500 text-white px-4 py-2 rounded"
+              >
+                삭제
+              </button>
+              <button
+                onClick={() => setShowModal(false)}
+                className="bg-gray-300 px-4 py-2 rounded"
+              >
+                취소
+              </button>
+            </div>
+          </Modal>
+        )}
+
+        {toast && (
+          <Toast
+            message={toast}
+            onClose={() => setToast("")}
+            type={toastType}
+          />
+        )}
+      </div>
+      <ConfirmButton label="확인" />
     </div>
   );
 }
