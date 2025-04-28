@@ -29,6 +29,7 @@ export default function AppRouter() {
           }
         >
           <Route path="" element={<Dashboard />} />
+          <Route path="dashboard" element={<Dashboard />} />
           <Route path="member" element={<MemberList />} />
           <Route path="qna" element={<QnaList />} />
           <Route path="qna/:id" element={<QnaDetail />} />

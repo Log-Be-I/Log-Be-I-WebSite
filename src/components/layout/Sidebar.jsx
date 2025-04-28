@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 export default function Sidebar() {
   return (
-    <aside className="w-48 md:w-56 h-screen bg-darkblue text-white p-4 md:p-6 transition-all duration-300">
+    <aside className="w-48 md:w-56 h-screen bg-sidebar text-white p-4 md:p-6 transition-all duration-300">
       <h1 className="text-xl md:text-2xl font-bold mb-6">Admin</h1>
       <nav className="flex flex-col gap-3">
         <Link

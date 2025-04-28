@@ -4,6 +4,7 @@ import { getQnaDetail, deleteAnswer } from "../../api/qnaApi";
 import Spinner from "../../components/common/Spinner";
 import AnswerForm from "../../components/qna/AnswerForm";
 import { format } from "date-fns";
+import ConfirmButton from "../../components/common/ConfirmButton";
 
 export default function QnaDetail() {
   const { id } = useParams();
@@ -34,38 +35,42 @@ export default function QnaDetail() {
     );
 
   return (
-    <div className="max-w-4xl mx-auto p-10 bg-white rounded-xl shadow-lg space-y-10">
-      <h2 className="text-3xl font-bold text-gray-800 border-b pb-4">
-        QnA 상세조회
-      </h2>
+    <div>
+      <div className="max-w-4xl mx-auto p-10 bg-white rounded-xl shadow-lg space-y-10">
+        <h2 className="text-3xl font-bold text-gray-800 border-b pb-4">
+          QnA 상세조회
+        </h2>
 
-      {/* 질문 정보 */}
-      <div className="space-y-6">
-        <div>
-          <span className="text-lg font-semibold text-gray-700">제목</span>
-          <p className="mt-2 text-gray-900">{qna.title}</p>
-        </div>
-        <div>
-          <span className="text-lg font-semibold text-gray-700">작성자</span>
-          <p className="mt-2 text-gray-900">{qna.writer || qna.memberId}</p>
-        </div>
-        <div>
-          <span className="text-lg font-semibold text-gray-700">내용</span>
-          <div className="mt-3 p-5 bg-gray-50 rounded-lg text-gray-800 min-h-24 relative">
-            {qna.content}
-            <div className="absolute bottom-2 right-4 text-sm text-gray-400">
-              등록일 {format(new Date(qna.createdAt), "yyyy-MM-dd")}
+        {/* 질문 정보 */}
+        <div className="space-y-6">
+          <div>
+            <span className="text-lg font-semibold text-gray-700">제목</span>
+            <p className="mt-2 text-gray-900">{qna.title}</p>
+          </div>
+          <div>
+            <span className="text-lg font-semibold text-gray-700">작성자</span>
+            <p className="mt-2 text-gray-900">{qna.writer || qna.memberId}</p>
+          </div>
+          <div>
+            <span className="text-lg font-semibold text-gray-700">내용</span>
+            <div className="mt-3 p-5 bg-gray-50 rounded-lg text-gray-800 min-h-24 relative">
+              {qna.content}
+              <div className="absolute bottom-2 right-4 text-sm text-gray-400">
+                등록일 {format(new Date(qna.createdAt), "yyyy-MM-dd")}
+              </div>
             </div>
           </div>
         </div>
+        {qna && (
+          <AnswerForm
+            answer={qna.answer}
+            questionId={qna.questionId}
+            refreshQnA={fetchData}
+          />
+        )}
       </div>
-      {qna && (
-        <AnswerForm
-          answer={qna.answer}
-          questionId={qna.questionId}
-          refreshQnA={fetchData}
-        />
-      )}
+
+      <ConfirmButton label="확인" />
     </div>
   );
 }

@@ -8,7 +8,7 @@ export default function QnaTableRow({ qna, index }) {
     const now = new Date();
     const created = new Date(createdAt);
     const diffTime = Math.abs(now - created);
-    return diffTime < 3 * 1000 * 60 * 60 * 24; // 3일
+    return diffTime < 2 * 1000 * 60 * 60 * 24; // 2일
   };
 
   return (
@@ -16,12 +16,18 @@ export default function QnaTableRow({ qna, index }) {
       className="border-b hover:bg-gray-50 cursor-pointer"
       onClick={() => navigate(`/qna/${qna.questionId}`)}
     >
-      <td className="py-3">{index}</td>
-      <td className="py-3">
-        {isNew(qna.createdAt) && <span className="text-red-500 ml-2">NEW</span>}
+      <td className="py-3 w-16">{index}</td>
+      <td className="py-3 text-left pl-4">
+        <div className="flex items-center gap-2">
+          {isNew(qna.createdAt) && (
+            <span className="inline-block bg-orange-600 text-white text-xs font-bold px-1.5 py-0.5 rounded">
+              NEW
+            </span>
+          )}
+          <span>{qna.title}</span>
+        </div>
       </td>
-      <td className="py-3">{qna.title}</td>
-      <td className="py-3">{qna.email || `회원번호 ${qna.memberId}`}</td>
+      <td className="py-3">{qna.writerEmail || `회원번호 ${qna.memberId}`}</td>
       <td className="py-3">
         {qna.questionAnswerStatus === "DONE_ANSWER" ? (
           <span className="text-green-500 font-semibold">답변완료</span>
