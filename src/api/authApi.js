@@ -6,7 +6,7 @@ export const loginApi = async ({ username, password }) => {
     { username, password },
     { headers: { "Content-Type": "application/json" } }
   );
-  // 헤더에서 AUthorzation 꺼내기
+  // 헤더에서 AUthorzation 꺼내기 !!
   const authHeader = response.headers.authorization;
 
   if (authHeader && authHeader.startsWith("Bearer ")) {
