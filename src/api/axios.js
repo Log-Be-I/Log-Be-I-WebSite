@@ -2,7 +2,7 @@
 import axios from "axios";
 
 const axiosInstance = axios.create({
-  baseURL: "https://web.logbe-i.com", // 👉 실제 API 주소로 변경
+  baseURL: "https://logbe-i.com", // 👉 실제 API 주소로 변경
   timeout: 5000,
 });
 
