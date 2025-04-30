@@ -1,11 +1,11 @@
-import axios from "axios";
+import axiosInstance from "./axios";
+
 export const loginApi = async ({ username, password }) => {
   console.log("🔥 로그인 요청 데이터:", { username, password });
-  const response = await axios.post(
-    "https://logbe-i.com/auth/login",
-    { username, password },
-    { headers: { "Content-Type": "application/json" } }
-  );
+  const response = await axiosInstance.post("/auth/login", {
+    username,
+    password,
+  });
   // 헤더에서 AUthorzation 꺼내기 !!
   const authHeader = response.headers.authorization;
 
