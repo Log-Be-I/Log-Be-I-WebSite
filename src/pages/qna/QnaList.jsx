@@ -52,7 +52,11 @@ export default function QnaList() {
     try {
       const res = await fetchAnswers(filters, filters.page, filters.sortType);
       setQnaList(res.data);
-      setTotalPages(res.pageInfo.totalPages);
+      //setTotalPages(res.pageInfo.totalPages);
+      const calculatedTotalPages = Math.ceil(
+        res.pageInfo.totalElements / res.pageInfo.size
+      );
+      setTotalPages(calculatedTotalPages);
     } catch (err) {
       setToast({ show: true, message: "조회 실패했습니다.", type: "error" });
     } finally {

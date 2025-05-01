@@ -10,7 +10,7 @@ import Modal from "../../components/common/Modal";
 import Toast from "../../components/common/Toast";
 import PinnedIcon from "../../components/notice/PinnedIcon";
 import { format } from "date-fns";
-
+import ConfirmButton from "../../components/common/ConfirmButton";
 export default function NoticeDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
