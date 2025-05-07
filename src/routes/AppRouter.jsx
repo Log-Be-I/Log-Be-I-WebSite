@@ -15,12 +15,32 @@ const PrivateRoute = ({ children }) => {
   return token ? children : <Navigate to="/login" replace />;
 };
 
+const PrivacyPage = () => {
+  return (
+    <iframe
+      src="/privacy.html"
+      style={{ width: "100%", height: "100vh", border: "none" }}
+      title="개인정보처리방침"
+    />
+  );
+};
+
+const TermsPage = () => {
+  return (
+    <iframe
+      src="/terms.html"
+      style={{ width: "100%", height: "100vh", border: "none" }}
+      title="이용약관"
+    />
+  );
+};
+
 export default function AppRouter() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/privacy" element={<></>} />
-        <Route path="/terms" element={<></>} />
+        <Route path="/privacy" element={<PrivacyPage />} />
+        <Route path="/terms" element={<TermsPage />} />
 
         <Route path="/login" element={<LoginPage />} />
         <Route
@@ -39,8 +59,6 @@ export default function AppRouter() {
           <Route path="notice" element={<NoticeList />} />
           <Route path="notice/register" element={<NoticeRegister />} />
           <Route path="notice/:id" element={<NoticeDetail />} />
-          
-
         </Route>
 
         <Route path="*" element={<Navigate to="/login" replace />} />
