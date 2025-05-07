@@ -19,6 +19,9 @@ export default function AppRouter() {
   return (
     <BrowserRouter>
       <Routes>
+        <Route path="/privacy" element={<></>} />
+        <Route path="/terms" element={<></>} />
+
         <Route path="/login" element={<LoginPage />} />
         <Route
           path="/*"
@@ -36,6 +39,8 @@ export default function AppRouter() {
           <Route path="notice" element={<NoticeList />} />
           <Route path="notice/register" element={<NoticeRegister />} />
           <Route path="notice/:id" element={<NoticeDetail />} />
+          
+
         </Route>
 
         <Route path="*" element={<Navigate to="/login" replace />} />
