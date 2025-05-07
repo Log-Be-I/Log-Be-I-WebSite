@@ -15,13 +15,4 @@ export default defineConfig({
       },
     },
   },
-  build: {
-    rollupOptions: {
-      input: {
-        main: path.resolve(__dirname, "index.html"),
-        privacy: path.resolve(__dirname, "public/privacy.html"),
-        terms: path.resolve(__dirname, "public/terms.html"),
-      },
-    },
-  },
 });
