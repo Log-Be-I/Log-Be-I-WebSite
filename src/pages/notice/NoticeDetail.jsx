@@ -41,6 +41,19 @@ export default function NoticeDetail() {
     fetchData();
   }, [id]);
 
+  const fetchData = async () => {
+    try {
+      setLoading(true);
+      const res = await getNoticeDetail(id);
+      setNotice(res.data);
+    } catch {
+      setToast("공지사항을 불러오는 데 실패했습니다.");
+      setToastType("error");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleDelete = async () => {
     try {
       await deleteNotice(id);
@@ -56,11 +69,28 @@ export default function NoticeDetail() {
 
   const handleUpdate = async (updatedData) => {
     try {
-      await updateNotice(id, updatedData);
+      // 기존 이미지 URL과 새 파일을 FormData로 구성
+      const patchDto = {
+        title: updatedData.title,
+        content: updatedData.content,
+        isPinned: updatedData.isPinned,
+        fileUrls: updatedData.existingImages, // 유지할 기존 이미지 URL 배열
+      };
+      const formData = new FormData();
+      formData.append(
+        "noticePatchDto",
+        new Blob([JSON.stringify(patchDto)], { type: "application/json" })
+      );
+      if (updatedData.newFiles && updatedData.newFiles.length > 0) {
+        updatedData.newFiles.forEach((file) => {
+          formData.append("images", file);
+        });
+      }
+      await updateNotice(id, formData);
+      await fetchData();
       setToast("수정이 완료되었습니다.");
       setToastType("success");
       setEditMode(false);
-      setNotice({ ...notice, ...updatedData });
     } catch {
       setToast("수정 실패");
       setToastType("error");

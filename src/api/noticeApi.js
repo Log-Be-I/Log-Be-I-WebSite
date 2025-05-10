@@ -21,10 +21,10 @@ export const getNoticeDetail = async (noticeId) => {
 
 // 공지사항 등록
 export const createNotice = async (formData) => {
-  // FormData 내용 확인
-  for (let pair of formData.entries()) {
-    console.log(pair[0], pair[1]);
-  }
+  // // FormData 내용 확인
+  // for (let pair of formData.entries()) {
+  //   console.log(pair[0], pair[1]);
+  // }
   const response = await axiosInstance.post("/notices", formData, {
     headers: {
       "Content-Type": "multipart/form-data",

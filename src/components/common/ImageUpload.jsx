@@ -1,59 +1,68 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { FaImage, FaTrash } from "react-icons/fa";
 
-export default function ImageUpload({ onImageSelect, initialImages = [] }) {
-  const [previews, setPreviews] = useState(initialImages);
-  const [files, setFiles] = useState([]);
+export default function ImageUpload({
+  existingImages = [],
+  newFiles = [],
+  onImagesChange,
+}) {
+  const [previews, setPreviews] = useState(
+    existingImages.concat(newFiles.map((file) => URL.createObjectURL(file)))
+  );
+  const [files, setFiles] = useState(newFiles);
   const [error, setError] = useState("");
+
+  useEffect(() => {
+    setPreviews(
+      existingImages.concat(files.map((file) => URL.createObjectURL(file)))
+    );
+  }, [existingImages, files]);
 
   const handleImageChange = (e) => {
     const selectedFiles = Array.from(e.target.files);
-    const newPreviews = [];
-    const newFiles = [];
-
-    // 파일 개수 제한 (최대 5개)
     if (previews.length + selectedFiles.length > 5) {
       setError("이미지는 최대 5개까지 업로드할 수 있습니다.");
       return;
     }
 
-    let validCount = 0;
-    selectedFiles.forEach((file) => {
-      // 파일 크기 체크 (5MB)
+    const newFileObjs = [];
+    const newPreviewUrls = [];
+    let readCount = 0;
+    selectedFiles.forEach((file, idx) => {
       if (file.size > 5 * 1024 * 1024) {
         setError("파일 크기는 5MB를 초과할 수 없습니다.");
         return;
       }
-      // 이미지 파일 타입 체크
       if (!file.type.startsWith("image/")) {
         setError("이미지 파일만 업로드 가능합니다.");
         return;
       }
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        newPreviews.push(reader.result);
-        newFiles.push(file);
-        validCount++;
-        if (validCount === selectedFiles.length) {
-          setPreviews((prev) => [...prev, ...newPreviews]);
-          setFiles((prev) => {
-            const updated = [...prev, ...newFiles];
-            onImageSelect(updated);
-            return updated;
-          });
-          setError("");
-        }
-      };
-      reader.readAsDataURL(file);
+      newFileObjs.push(file);
+      newPreviewUrls.push(URL.createObjectURL(file));
+      readCount++;
+      if (readCount === selectedFiles.length) {
+        const updatedFiles = [...files, ...newFileObjs];
+        const updatedPreviews = [...previews, ...newPreviewUrls];
+        setFiles(updatedFiles);
+        setPreviews(updatedPreviews);
+        setError("");
+        onImagesChange(existingImages, updatedFiles);
+      }
     });
   };
 
   const handleRemove = (index) => {
-    const newPreviews = previews.filter((_, i) => i !== index);
-    const newFiles = files.filter((_, i) => i !== index);
-    setPreviews(newPreviews);
-    setFiles(newFiles);
-    onImageSelect(newFiles);
+    if (index < existingImages.length) {
+      const updatedExisting = existingImages.filter((_, i) => i !== index);
+      setPreviews(previews.filter((_, i) => i !== index));
+      onImagesChange(updatedExisting, files);
+    } else {
+      const fileIdx = index - existingImages.length;
+      const updatedFiles = files.filter((_, i) => i !== fileIdx);
+      setFiles(updatedFiles);
+      setPreviews(previews.filter((_, i) => i !== index));
+      onImagesChange(existingImages, updatedFiles);
+    }
   };
 
   return (
