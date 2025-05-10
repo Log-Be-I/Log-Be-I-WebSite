@@ -1,13 +1,15 @@
 import { useState } from "react";
+import ImageUpload from "../common/ImageUpload";
 
 export default function NoticeForm({ initialData = {}, onSubmit }) {
   const [title, setTitle] = useState(initialData.title || "");
   const [content, setContent] = useState(initialData.content || "");
   const [isPinned, setIsPinned] = useState(initialData.isPinned || "NONE");
+  const [images, setImages] = useState(initialData.images || []);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSubmit({ title, content, isPinned });
+    onSubmit({ title, content, isPinned, images });
   };
 
   return (
@@ -41,6 +43,13 @@ export default function NoticeForm({ initialData = {}, onSubmit }) {
           className="w-full border p-2 rounded"
           rows="5"
           required
+        />
+      </div>
+      <div>
+        <label className="block font-semibold">이미지</label>
+        <ImageUpload
+          onImageSelect={setImages}
+          initialImages={initialData.images}
         />
       </div>
       <button type="submit" className="bg-primary text-white px-4 py-2 rounded">
