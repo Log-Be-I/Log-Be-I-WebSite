@@ -13,12 +13,18 @@ export default function ImageUpload({
   const [error, setError] = useState("");
 
   useEffect(() => {
+    console.log("[ImageUpload] useEffect - existingImages:", existingImages);
+    console.log("[ImageUpload] useEffect - files:", files);
     setPreviews(
       existingImages.concat(files.map((file) => URL.createObjectURL(file)))
     );
   }, [existingImages, files]);
 
   const handleImageChange = (e) => {
+    console.log(
+      "[ImageUpload] input[type=file] onChange fired",
+      e.target.files
+    );
     const selectedFiles = Array.from(e.target.files);
     if (previews.length + selectedFiles.length > 5) {
       setError("이미지는 최대 5개까지 업로드할 수 있습니다.");
@@ -43,6 +49,10 @@ export default function ImageUpload({
       if (readCount === selectedFiles.length) {
         const updatedFiles = [...files, ...newFileObjs];
         const updatedPreviews = [...previews, ...newPreviewUrls];
+        console.log(
+          "[ImageUpload] handleImageChange - updatedFiles:",
+          updatedFiles
+        );
         setFiles(updatedFiles);
         setPreviews(updatedPreviews);
         setError("");
@@ -52,6 +62,7 @@ export default function ImageUpload({
   };
 
   const handleRemove = (index) => {
+    console.log("[ImageUpload] handleRemove - index:", index);
     if (index < existingImages.length) {
       const updatedExisting = existingImages.filter((_, i) => i !== index);
       setPreviews(previews.filter((_, i) => i !== index));
@@ -76,6 +87,9 @@ export default function ImageUpload({
             onChange={handleImageChange}
             multiple
             className="hidden"
+            onClick={() =>
+              console.log("[ImageUpload] input[type=file] clicked")
+            }
           />
         </label>
         <span className="text-sm text-gray-500">
