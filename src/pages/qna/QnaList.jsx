@@ -25,6 +25,7 @@ export default function QnaList() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [toast, setToast] = useState({ show: false, message: "", type: "" });
+  const [totalElements, setTotalElements] = useState(0);
 
   // 정렬 상태는 단일 sortType만!
   const [sortType, setSortType] = useState("newest");
@@ -52,6 +53,7 @@ export default function QnaList() {
     try {
       const res = await fetchAnswers(filters, filters.page, filters.sortType);
       setQnaList(res.data);
+      setTotalElements(res.pageInfo.totalElements);
       //setTotalPages(res.pageInfo.totalPages);
       const calculatedTotalPages = Math.ceil(
         res.pageInfo.totalElements / res.pageInfo.size
@@ -103,7 +105,7 @@ export default function QnaList() {
         setFilters={setFilters}
         onFilterChange={handleFilterChange}
         onSearch={() => handleSearch()}
-        totalCount={qnaList.length}
+        totalCount={totalElements}
         sortType={filters.sortType}
         setSortType={(sortType) => handleFilterChange({ sortType })}
         setPage={(page) => handleFilterChange({ page })}
