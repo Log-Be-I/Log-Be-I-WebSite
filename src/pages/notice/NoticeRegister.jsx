@@ -28,9 +28,14 @@ export default function NoticeRegister() {
 
       // 이미지 파일들을 FormData에 추가
       if (formData.images && formData.images.length > 0) {
+        console.log("newFiles:", formData.images);
         formData.images.forEach((image) => {
           formDataToSend.append("images", image);
         });
+      }
+      // FormData 내용 전체 출력
+      for (let pair of formDataToSend.entries()) {
+        console.log("FormData:", pair[0], pair[1]);
       }
 
       await createNotice(formDataToSend);
