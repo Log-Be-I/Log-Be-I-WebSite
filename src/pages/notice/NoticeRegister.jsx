@@ -27,9 +27,9 @@ export default function NoticeRegister() {
       );
 
       // 이미지 파일들을 FormData에 추가
-      if (formData.images && formData.images.length > 0) {
-        console.log("newFiles:", formData.images);
-        formData.images.forEach((image) => {
+      if (formData.newFiles && formData.newFiles.length > 0) {
+        console.log("newFiles:", formData.newFiles);
+        formData.newFiles.forEach((image) => {
           formDataToSend.append("images", image);
         });
       }
