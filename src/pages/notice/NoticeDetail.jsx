@@ -9,8 +9,12 @@ import NoticeForm from "../../components/notice/NoticeForm";
 import Modal from "../../components/common/Modal";
 import Toast from "../../components/common/Toast";
 import PinnedIcon from "../../components/notice/PinnedIcon";
+import NoticeImageGallery from "../../components/notice/NoticeImageGallery";
 import { format } from "date-fns";
 import ConfirmButton from "../../components/common/ConfirmButton";
+import Spinner from "../../components/common/Spinner";
+import { FaArrowLeft } from "react-icons/fa";
+
 export default function NoticeDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -24,49 +28,99 @@ export default function NoticeDetail() {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        setLoading(true);
         const res = await getNoticeDetail(id);
         setNotice(res.data);
       } catch {
         setToast("공지사항을 불러오는 데 실패했습니다.");
+        setToastType("error");
+      } finally {
+        setLoading(false);
       }
     };
     fetchData();
   }, [id]);
+
+  const fetchData = async () => {
+    try {
+      setLoading(true);
+      const res = await getNoticeDetail(id);
+      setNotice(res.data);
+    } catch {
+      setToast("공지사항을 불러오는 데 실패했습니다.");
+      setToastType("error");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleDelete = async () => {
     try {
       await deleteNotice(id);
       setToast("공지사항이 삭제되었습니다.");
       setToastType("success");
-      navigate("/notice");
+      setTimeout(() => navigate("/notice"), 1500);
     } catch {
       setToast("삭제 실패");
       setToastType("error");
     }
+    setShowModal(false);
   };
 
   const handleUpdate = async (updatedData) => {
     try {
-      await updateNotice(id, updatedData);
+      // 기존 이미지 URL과 새 파일을 FormData로 구성
+      const patchDto = {
+        title: updatedData.title,
+        content: updatedData.content,
+        isPinned: updatedData.isPinned,
+        fileUrls: updatedData.existingImages, // 유지할 기존 이미지 URL 배열
+      };
+      const formData = new FormData();
+      formData.append(
+        "noticePatchDto",
+        new Blob([JSON.stringify(patchDto)], { type: "application/json" })
+      );
+      if (updatedData.newFiles && updatedData.newFiles.length > 0) {
+        updatedData.newFiles.forEach((file) => {
+          formData.append("images", file);
+        });
+      }
+      await updateNotice(id, formData);
+      await fetchData();
       setToast("수정이 완료되었습니다.");
       setToastType("success");
       setEditMode(false);
-      setNotice({ ...notice, ...updatedData });
     } catch {
       setToast("수정 실패");
       setToastType("error");
     }
   };
 
+  if (loading) return <Spinner />;
   if (!notice)
-    return <div className="text-center text-gray-500">Loading...</div>;
+    return (
+      <div className="text-center text-gray-500">
+        공지사항을 찾을 수 없습니다.
+      </div>
+    );
 
   return (
     <div>
       <div className="max-w-4xl mx-auto p-10 bg-white rounded-xl shadow-lg space-y-10">
-        <h2 className="text-3xl font-bold text-gray-800 border-b pb-4">
-          공지사항 상세 조회
-        </h2>
+        <div className="flex items-center justify-between border-b pb-4">
+          <div className="flex items-center gap-4">
+            <button
+              onClick={() => navigate("/notice")}
+              className="p-2 text-gray-600 hover:bg-gray-100 rounded-full transition-colors"
+            >
+              <FaArrowLeft className="w-5 h-5" />
+            </button>
+            <h2 className="text-3xl font-bold text-gray-800">
+              공지사항 상세 조회
+            </h2>
+          </div>
+        </div>
 
         {editMode ? (
           <NoticeForm initialData={notice} onSubmit={handleUpdate} />
@@ -93,16 +147,11 @@ export default function NoticeDetail() {
             </div>
             <div>
               <span className="text-lg font-semibold text-gray-700">내용</span>
-              <div className="mt-4 p-5 bg-gray-50 rounded-lg text-gray-800 min-h-24">
+              <div className="mt-4 p-5 bg-gray-50 rounded-lg text-gray-800 min-h-24 whitespace-pre-wrap">
                 {notice.content}
               </div>
             </div>
-            <div>
-              <span className="text-lg font-semibold text-gray-700">
-                이미지
-              </span>
-              <p className="mt-3 text-gray-900">{notice.image}</p>
-            </div>
+            <NoticeImageGallery images={notice.fileUrls} />
             <div className="text-sm text-gray-400 text-right mt-6">
               작성일: {format(new Date(notice.createdAt), "yyyy-MM-dd")}
             </div>
@@ -129,20 +178,25 @@ export default function NoticeDetail() {
         {/* Confirm Modal */}
         {showModal && (
           <Modal isOpen={showModal} onClose={() => setShowModal(false)}>
-            <p>정말 삭제하시겠습니까?</p>
-            <div className="flex justify-center gap-4 mt-4">
-              <button
-                onClick={handleDelete}
-                className="bg-red-500 text-white px-4 py-2 rounded"
-              >
-                삭제
-              </button>
-              <button
-                onClick={() => setShowModal(false)}
-                className="bg-gray-300 px-4 py-2 rounded"
-              >
-                취소
-              </button>
+            <div className="p-6">
+              <h3 className="text-lg font-semibold mb-4">공지사항 삭제</h3>
+              <p className="text-gray-600 mb-6">
+                정말로 이 공지사항을 삭제하시겠습니까?
+              </p>
+              <div className="flex justify-end gap-4">
+                <button
+                  onClick={() => setShowModal(false)}
+                  className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded"
+                >
+                  취소
+                </button>
+                <button
+                  onClick={handleDelete}
+                  className="px-4 py-2 bg-red-500 text-white hover:bg-red-600 rounded"
+                >
+                  삭제
+                </button>
+              </div>
             </div>
           </Modal>
         )}
@@ -155,7 +209,6 @@ export default function NoticeDetail() {
           />
         )}
       </div>
-      <ConfirmButton label="확인" />
     </div>
   );
 }
