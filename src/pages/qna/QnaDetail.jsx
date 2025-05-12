@@ -49,7 +49,7 @@ export default function QnaDetail() {
           </div>
           <div>
             <span className="text-lg font-semibold text-gray-700">작성자</span>
-            <p className="mt-2 text-gray-900">{qna.writer || qna.memberId}</p>
+            <p className="mt-2 text-gray-900">{qna.writerEmail || qna.memberId}</p>
           </div>
           <div>
             <span className="text-lg font-semibold text-gray-700">내용</span>
