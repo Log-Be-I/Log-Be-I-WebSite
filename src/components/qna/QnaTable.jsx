@@ -5,7 +5,7 @@ export default function QnaTable({ qnaList }) {
     <table className="w-full border-t text-center">
       <thead className="bg-gray-100">
         <tr>
-          <th className="py-2">No</th>
+          <th className="py-2">순번</th>
           <th className="py-2 text-left pl-4">제목</th>
           <th className="py-2">작성자</th>
           <th className="py-2">답변여부</th>

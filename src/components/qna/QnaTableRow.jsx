@@ -16,7 +16,7 @@ export default function QnaTableRow({ qna, index }) {
       className="border-b hover:bg-gray-50 cursor-pointer"
       onClick={() => navigate(`/qna/${qna.questionId}`)}
     >
-      <td className="py-3 w-16">{index}</td>
+      <td className="py-3 w-16">{qna.questionId}</td>
       <td className="py-3 text-left pl-4">
         <div className="flex items-center gap-2">
           {isNew(qna.createdAt) && (
